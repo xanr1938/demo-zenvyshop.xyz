@@ -1,27 +1,16 @@
-let state = {
-    enabled: false,
-    type: "server",
-};
+import { NextRequest } from "next/server";
+import { getAdminFromRequest, unauthorized } from "@/lib/server-auth";
 
-// GET → ให้หน้าเว็บอ่าน
+let state = { enabled: false, type: "server" };
+
 export async function GET() {
-    return Response.json(state);
+  return Response.json(state);
 }
 
-// POST → ให้ bot ยิงมาเปลี่ยนค่า
-export async function POST(req: Request) {
-    const body = await req.json();
-
-    if (typeof body.enabled === "boolean") {
-        state.enabled = body.enabled;
-    }
-
-    if (body.type) {
-        state.type = body.type;
-    }
-
-    return Response.json({
-        success: true,
-        state,
-    });
+export async function POST(req: NextRequest) {
+  if (!await getAdminFromRequest(req)) return unauthorized();
+  const body = await req.json() as { enabled?: boolean; type?: string };
+  if (typeof body.enabled === "boolean") state.enabled = body.enabled;
+  if (body.type) state.type = body.type;
+  return Response.json({ success: true, state });
 }

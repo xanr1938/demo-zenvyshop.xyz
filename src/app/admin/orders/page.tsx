@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import { adminFetch } from "@/lib/admin-fetch";
 
 interface Order {
   $id: string; $createdAt: string; userId: string;
@@ -25,13 +26,13 @@ export default function AdminOrdersPage() {
   const [updating, setUpdating] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/admin/orders").then((r) => r.json()).then((d) => setOrders(d.documents ?? [])).catch(() => {}).finally(() => setLoading(false));
+    adminFetch("/api/admin/orders").then((r) => r.json()).then((d) => setOrders(d.documents ?? [])).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   async function updateStatus(orderId: string, status: string) {
     setUpdating(orderId);
     try {
-      await fetch("/api/admin/orders", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId, status }) });
+      await adminFetch("/api/admin/orders", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId, status }) });
       setOrders((prev) => prev.map((o) => o.$id === orderId ? { ...o, status } : o));
     } catch {}
     finally { setUpdating(null); }

@@ -6,6 +6,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/context/AuthContext";
+import { adminFetch } from "@/lib/admin-fetch";
 
 // ── แก้ข้อมูลบัญชีที่นี่ ──────────────────────────────────────────
 const ACCOUNT = {
@@ -69,9 +70,8 @@ function PaymentContent() {
       const form = new FormData();
       form.append("slip", slipFile);
       form.append("amount", amount.toString());
-      form.append("userId", user?.$id ?? "");
 
-      const res = await fetch("/api/verify-slip", { method: "POST", body: form });
+      const res = await adminFetch("/api/verify-slip", { method: "POST", body: form });
       const data: VerifyResult = await res.json();
       setResult(data);
       setState(data.success ? "success" : "error");

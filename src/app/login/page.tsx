@@ -31,7 +31,6 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [rawError, setRawError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // ถ้า login อยู่แล้ว → redirect ไปหน้าแรก
@@ -48,8 +47,6 @@ export default function LoginPage() {
       router.push("/");
     } catch (err) {
       setError(friendlyError(err));
-      const e = err as AppwriteException;
-      setRawError(`type: ${e?.type ?? "?"} | code: ${e?.code ?? "?"} | msg: ${e?.message ?? String(err)}`);
     } finally {
       setLoading(false);
     }
@@ -69,7 +66,6 @@ export default function LoginPage() {
           {error && (
             <div className="px-4 py-3 bg-[#FCE9E9] dark:bg-[#d44242]/15 border border-[#d44242]/20 text-[#d44242] text-sm rounded-xl">
               {error}
-              {rawError && <div className="mt-1 text-xs opacity-70 break-all">[debug] {rawError}</div>}
             </div>
           )}
           <div>

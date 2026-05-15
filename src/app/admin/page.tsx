@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { useAuth } from "@/context/AuthContext";
+import { adminFetch } from "@/lib/admin-fetch";
 
 interface Stats {
   totalOrders: number; totalRevenue: number; pendingOrders: number;
@@ -31,7 +32,7 @@ export default function AdminPage() {
   const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
-    fetch("/api/admin/stats").then((r) => r.json()).then(setStats).catch(() => { });
+    adminFetch("/api/admin/stats").then((r) => r.json()).then(setStats).catch(() => { });
   }, []);
 
   return (
