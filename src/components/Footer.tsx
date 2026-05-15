@@ -37,7 +37,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               {[
                 { label: "Shop", href: "/shop" },
-                { label: "Dashboard", href: "/dashboard" },
+                { label: "ประวัติคำสั่งซื้อ", href: "/history" },
                 { label: "Login", href: "/login" },
                 { label: "Register", href: "/register" },
               ].map((l) => (

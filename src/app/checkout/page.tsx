@@ -83,11 +83,11 @@ export default function CheckoutPage() {
       // แจ้งถ้ามีรายการที่ล้มเหลวและได้รับเงินคืน
       if (data.refunded && data.failedItems?.length > 0) {
         await refreshProfile();
-        router.push(`/dashboard?refunded=${data.refunded}&failed=${data.failedItems.join(",")}`);
+        router.push(`/history?refunded=${data.refunded}&failed=${data.failedItems.join(",")}`);
         return;
       }
       await refreshProfile();
-      router.push("/dashboard");
+      router.push("/history");
     } catch { setError("เกิดข้อผิดพลาด กรุณาลองใหม่"); }
     finally  { setSubmitting(false); }
   }

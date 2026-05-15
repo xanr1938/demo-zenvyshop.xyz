@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { join } from "path";
 import { getAdminFromRequest, unauthorized } from "@/lib/server-auth";
+// GET is intentionally public — shop pages need it to show enabled products
 
 const FILE = join(process.cwd(), "data", "gafiw-settings.json");
 
@@ -15,8 +16,7 @@ function readSettings(): GafiwSettings {
   } catch { return {}; }
 }
 
-export async function GET(req: NextRequest) {
-  if (!await getAdminFromRequest(req)) return unauthorized();
+export async function GET() {
   return NextResponse.json(readSettings());
 }
 

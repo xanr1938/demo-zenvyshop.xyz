@@ -60,7 +60,7 @@ function SuccessContent() {
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
         <Link
-          href="/dashboard"
+          href="/history"
           className="px-6 py-3 bg-[#d44242] hover:bg-[#E87A7A] text-white font-bold rounded-2xl transition-all shadow-md shadow-[#d44242]/20 text-sm"
         >
           ดูคำสั่งซื้อของฉัน

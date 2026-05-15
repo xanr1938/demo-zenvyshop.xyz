@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { adminFetch } from "@/lib/admin-fetch";
 
 export default function AdminPage() {
     const [enabled, setEnabled] = useState(false);
@@ -12,8 +13,10 @@ export default function AdminPage() {
     };
 
     const toggle = async () => {
-        const res = await fetch("/api/maintenance", {
+        const res = await adminFetch("/api/maintenance", {
             method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ enabled: !enabled }),
         });
 
         const data = await res.json();
