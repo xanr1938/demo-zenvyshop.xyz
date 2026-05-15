@@ -5,6 +5,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import type { GafiwProduct } from "@/components/ProductCard";
 import type { GafiwSettings } from "@/app/api/admin/gafiw-settings/route";
+import { adminFetch } from "@/lib/admin-fetch";
 
 export default function AdminGafiwPage() {
   const [products, setProducts] = useState<GafiwProduct[]>([]);
@@ -20,8 +21,8 @@ export default function AdminGafiwPage() {
     setLoading(true);
     const [pRes, sRes, bRes] = await Promise.all([
       fetch("/api/gafiw/products").then((r) => r.json()),
-      fetch("/api/admin/gafiw-settings").then((r) => r.json()),
-      fetch("/api/gafiw/balance").then((r) => r.json()),
+      adminFetch("/api/admin/gafiw-settings").then((r) => r.json()),
+      adminFetch("/api/gafiw/balance").then((r) => r.json()),
     ]);
     const prods: GafiwProduct[] = pRes.data ?? [];
     setProducts(prods);
@@ -53,7 +54,7 @@ export default function AdminGafiwPage() {
 
   async function save() {
     setSaving(true);
-    await fetch("/api/admin/gafiw-settings", {
+    await adminFetch("/api/admin/gafiw-settings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(settings),

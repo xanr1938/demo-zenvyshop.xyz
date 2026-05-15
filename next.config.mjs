@@ -5,11 +5,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
-  "style-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' https://unpkg.com https://static.cloudflareinsights.com https://vercel.live",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: https: blob:",
-  "font-src 'self' data:",
-  "connect-src 'self' https://sgp.cloud.appwrite.io wss://sgp.cloud.appwrite.io",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "connect-src 'self' https://sgp.cloud.appwrite.io wss://sgp.cloud.appwrite.io https://vercel.live",
   "object-src 'none'",
   "frame-ancestors 'self'",
   "base-uri 'self'",
