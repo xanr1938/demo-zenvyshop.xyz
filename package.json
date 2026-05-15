@@ -1,34 +1,41 @@
 {
-  "name": "demo-zenyshop.xyz",
+  "name": "zenvyshop",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "setup": "node Appwrite_Main/setup.mjs"
   },
   "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "lucide-react": "^1.14.0",
-    "next": "16.2.4",
-    "next-auth": "^4.24.14",
-    "next-themes": "^0.4.6",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "uuid": "^14.0.0",
-    "zustand": "^5.0.13"
+    "@appwrite.io/pink-icons": "^1.0.0",
+    "@lottiefiles/react-lottie-player": "^3.6.0",
+    "@tailwindcss/postcss": "^4.1.11",
+    "appwrite": "^18.1.1",
+    "fs": "^0.0.1-security",
+    "lottie-react": "^2.4.1",
+    "motion": "^12.38.0",
+    "next": "^15.4.8",
+    "node-appwrite": "^24.0.0",
+    "path": "^0.12.7",
+    "postcss": "^8.5.6",
+    "promptpay-qr": "^0.5.0",
+    "qrcode": "^1.5.4",
+    "react": "^19.1.2",
+    "react-dom": "^19.1.2",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
+    "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/uuid": "^10.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.4",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@types/node": "^25.6.0",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "prettier": "3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "typescript": "^6.0.3"
   }
 }
