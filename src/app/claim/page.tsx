@@ -88,7 +88,7 @@ function ClaimPage() {
         {/* Form */}
         <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
           <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wide">
-            GaFiw Order ID
+            zenvyshop Order ID
           </label>
           <div className="flex gap-2">
             <input

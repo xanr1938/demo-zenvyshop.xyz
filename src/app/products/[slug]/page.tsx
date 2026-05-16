@@ -10,7 +10,7 @@ import { getProductBySlug } from "@appwrite/database";
 import { getProductImageUrl } from "@appwrite/storage";
 import { subscribeToProducts } from "@appwrite/realtime";
 import type { Product, CartItem } from "@appwrite/types";
-import type { GafiwProduct } from "@/components/ProductCard";
+import type { DigitalProduct } from "@/components/ProductCard";
 import { RealtimeResponseEvent } from "appwrite";
 
 type Tab = "description" | "details";
@@ -23,7 +23,7 @@ function htmlToText(html: string) {
     .trim();
 }
 
-function gafiwToCartItem(p: GafiwProduct): CartItem {
+function digitalToCartItem(p: DigitalProduct): CartItem {
   return {
     $id: `gafiw_${p.type_id}`,
     $collectionId: "gafiw",
@@ -55,7 +55,7 @@ export default function ProductPage() {
   const { addItem, items } = useCart();
 
   const [product, setProduct] = useState<Product | null>(null);
-  const [gafiw, setGafiw] = useState<GafiwProduct | null>(null);
+  const [digital, setDigital] = useState<DigitalProduct | null>(null);
   const [loading, setLoading] = useState(true);
   const [added, setAdded] = useState(false);
   const [tab, setTab] = useState<Tab>("description");
@@ -69,18 +69,18 @@ export default function ProductPage() {
           setLoading(false);
           return;
         }
-        // Not found in Appwrite → try GaFiwShop (+ apply admin settings)
+        // Not found in Appwrite → try Digital (+ apply admin settings)
         const [pRes, sRes] = await Promise.all([
           fetch("/api/gafiw/products").then((r) => r.json()),
           fetch("/api/admin/gafiw-settings").then((r) => r.json()),
         ]);
-        const found = (pRes.data as GafiwProduct[])?.find((g) => g.type_id === slug);
+        const found = (pRes.data as DigitalProduct[])?.find((g) => g.type_id === slug);
         if (!found) { router.push("/shop"); return; }
         // Apply custom price if admin set one
         const customPrice = sRes?.[found.type_id]?.customPrice;
         const enabled = sRes?.[found.type_id]?.enabled;
         if (enabled === false) { router.push("/shop"); return; }
-        setGafiw(customPrice ? { ...found, pricevip: customPrice } : found);
+        setDigital(customPrice ? { ...found, pricevip: customPrice } : found);
         setLoading(false);
       })
       .catch(async () => {
@@ -89,11 +89,11 @@ export default function ProductPage() {
             fetch("/api/gafiw/products").then((r) => r.json()),
             fetch("/api/admin/gafiw-settings").then((r) => r.json()),
           ]);
-          const found = (pRes.data as GafiwProduct[])?.find((g) => g.type_id === slug);
+          const found = (pRes.data as DigitalProduct[])?.find((g) => g.type_id === slug);
           if (!found) { router.push("/shop"); return; }
           const customPrice = sRes?.[found.type_id]?.customPrice;
           if (sRes?.[found.type_id]?.enabled === false) { router.push("/shop"); return; }
-          setGafiw(customPrice ? { ...found, pricevip: customPrice } : found);
+          setDigital(customPrice ? { ...found, pricevip: customPrice } : found);
         } catch {
           router.push("/shop");
         }
@@ -132,17 +132,17 @@ export default function ProductPage() {
     );
   }
 
-  // ── GaFiwShop product ──────────────────────────────────────────────────────
-  if (gafiw) {
-    const inCart = items.some((i) => i.$id === `gafiw_${gafiw.type_id}`);
+  // ── Digital product ──────────────────────────────────────────────────────
+  if (digital) {
+    const inCart = items.some((i) => i.$id === `gafiw_${digital.type_id}`);
     const DETAILS = [
-      { label: "หมวดหมู่", value: gafiw.type_menu },
-      { label: "คงเหลือ", value: gafiw.stock > 0 ? `${gafiw.stock} ชิ้น` : "หมด" },
-      { label: "รหัสสินค้า", value: gafiw.type_id.slice(-8) },
+      { label: "หมวดหมู่", value: digital.type_menu },
+      { label: "คงเหลือ", value: digital.stock > 0 ? `${digital.stock} ชิ้น` : "หมด" },
+      { label: "รหัสสินค้า", value: digital.type_id.slice(-8) },
     ];
 
     function handleAdd() {
-      addItem(gafiwToCartItem(gafiw!));
+      addItem(digitalToCartItem(digital!));
       setAdded(true);
       setTimeout(() => setAdded(false), 1500);
     }
@@ -156,15 +156,15 @@ export default function ProductPage() {
             <span>/</span>
             <Link href="/shop" className="hover:text-[#d44242] transition-colors">Shop</Link>
             <span>/</span>
-            <span className="text-slate-600 dark:text-slate-300 truncate max-w-[200px]">{gafiw.name}</span>
+            <span className="text-slate-600 dark:text-slate-300 truncate max-w-[200px]">{digital.name}</span>
           </nav>
 
           <div className="grid md:grid-cols-2 gap-10 mb-10">
             {/* Image */}
             <div className="aspect-square rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center p-8">
               <img
-                src={gafiw.imageapi}
-                alt={gafiw.name}
+                src={digital.imageapi}
+                alt={digital.name}
                 className="w-full h-full object-contain"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =
@@ -177,30 +177,30 @@ export default function ProductPage() {
             <div className="flex flex-col justify-between pt-1">
               <div>
                 <p className="font-mono text-[10px] text-slate-400 dark:text-slate-500 tracking-widest uppercase mb-2">
-                  {gafiw.type_menu}
+                  {digital.type_menu}
                 </p>
                 <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-5 leading-snug">
-                  {gafiw.name}
+                  {digital.name}
                 </h1>
                 <div className="flex items-end gap-3 mb-5">
                   <span className="text-4xl font-extrabold text-[#d44242]">
-                    ฿{gafiw.pricevip.toLocaleString()}
+                    ฿{digital.pricevip.toLocaleString()}
                   </span>
                 </div>
                 <div className="mb-6">
-                  <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border ${gafiw.stock > 0
+                  <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border ${digital.stock > 0
                     ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800"
                     : "bg-[#FCE9E9] dark:bg-[#d44242]/15 text-[#d44242] border-[#d44242]/20"
                     }`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${gafiw.stock > 0 ? "bg-emerald-500" : "bg-[#d44242]"}`} />
-                    {gafiw.stock > 0 ? `มีสินค้า ${gafiw.stock} ชิ้น` : "สินค้าหมด"}
+                    <span className={`w-1.5 h-1.5 rounded-full ${digital.stock > 0 ? "bg-emerald-500" : "bg-[#d44242]"}`} />
+                    {digital.stock > 0 ? `มีสินค้า ${digital.stock} ชิ้น` : "สินค้าหมด"}
                   </span>
                 </div>
               </div>
               <div className="space-y-3">
                 <button
                   onClick={handleAdd}
-                  disabled={inCart || added || gafiw.stock === 0}
+                  disabled={inCart || added || digital.stock === 0}
                   className={`w-full py-4 rounded-2xl font-bold text-sm transition-all shadow-lg ${added || inCart
                     ? "bg-emerald-500 text-white shadow-emerald-200 cursor-not-allowed"
                     : "bg-[#d44242] hover:bg-[#E87A7A] text-white shadow-[#d44242]/20 disabled:bg-slate-200 dark:disabled:bg-slate-700 disabled:shadow-none disabled:text-slate-400 disabled:cursor-not-allowed"
@@ -210,7 +210,7 @@ export default function ProductPage() {
                     ? "✓ เพิ่มลงตะกร้าแล้ว"
                     : inCart
                       ? "✓ อยู่ในตะกร้าแล้ว"
-                      : gafiw.stock === 0
+                      : digital.stock === 0
                         ? "สินค้าหมด"
                         : "เพิ่มลงตะกร้า"}
                 </button>
@@ -246,7 +246,7 @@ export default function ProductPage() {
             <div className="p-8">
               {tab === "description" ? (
                 <p className="text-slate-600 dark:text-slate-300 leading-8 whitespace-pre-line text-sm">
-                  {htmlToText(gafiw.details)}
+                  {htmlToText(digital.details)}
                 </p>
               ) : (
                 <dl className="grid grid-cols-2 md:grid-cols-4 gap-4">

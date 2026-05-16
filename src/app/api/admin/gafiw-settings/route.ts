@@ -6,10 +6,10 @@ import { getAdminFromRequest, unauthorized } from "@/lib/server-auth";
 
 const FILE = join(process.cwd(), "data", "gafiw-settings.json");
 
-export interface GafiwSetting  { enabled: boolean; customPrice?: number; }
-export type    GafiwSettings   = Record<string, GafiwSetting>;
+export interface DigitalSetting  { enabled: boolean; customPrice?: number; }
+export type    DigitalSettings   = Record<string, DigitalSetting>;
 
-function readSettings(): GafiwSettings {
+function readSettings(): DigitalSettings {
   try {
     if (!existsSync(FILE)) return {};
     return JSON.parse(readFileSync(FILE, "utf-8"));
@@ -22,7 +22,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   if (!await getAdminFromRequest(req)) return unauthorized();
-  const body = await req.json() as GafiwSettings;
+  const body = await req.json() as DigitalSettings;
   writeFileSync(FILE, JSON.stringify(body, null, 2), "utf-8");
   return NextResponse.json({ ok: true });
 }

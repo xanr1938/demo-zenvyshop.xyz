@@ -3,13 +3,13 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
-import type { GafiwProduct } from "@/components/ProductCard";
-import type { GafiwSettings } from "@/app/api/admin/gafiw-settings/route";
+import type { DigitalProduct } from "@/components/ProductCard";
+import type { DigitalSettings } from "@/app/api/admin/gafiw-settings/route";
 import { adminFetch } from "@/lib/admin-fetch";
 
-export default function AdminGafiwPage() {
-  const [products, setProducts] = useState<GafiwProduct[]>([]);
-  const [settings, setSettings] = useState<GafiwSettings>({});
+export default function AdminDigitalPage() {
+  const [products, setProducts] = useState<DigitalProduct[]>([]);
+  const [settings, setSettings] = useState<DigitalSettings>({});
   const [balance,  setBalance]  = useState<string | null>(null);
   const [loading,  setLoading]  = useState(true);
   const [saving,   setSaving]   = useState(false);
@@ -24,10 +24,10 @@ export default function AdminGafiwPage() {
       adminFetch("/api/admin/gafiw-settings").then((r) => r.json()),
       adminFetch("/api/gafiw/balance").then((r) => r.json()),
     ]);
-    const prods: GafiwProduct[] = pRes.data ?? [];
+    const prods: DigitalProduct[] = pRes.data ?? [];
     setProducts(prods);
     // Initialize settings for new products
-    const base: GafiwSettings = {};
+    const base: DigitalSettings = {};
     for (const p of prods) {
       base[p.type_id] = sRes[p.type_id] ?? { enabled: true, customPrice: undefined };
     }
@@ -84,12 +84,12 @@ export default function AdminGafiwPage() {
         <div className="flex items-start justify-between mb-6 flex-wrap gap-4">
           <div className="flex items-center gap-3 flex-wrap">
             <Link href="/admin" className="text-slate-400 dark:text-slate-500 hover:text-[#d44242] text-sm">← Admin</Link>
-            <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">GaFiwShop Products</h1>
+            <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">Digital Products</h1>
           </div>
           {/* Balance card */}
           <div className="flex items-center gap-4">
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-3 flex flex-col items-end">
-              <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">ยอดเงินต้นทาง (GaFiw)</p>
+              <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">ยอดเงินคงเหลือ</p>
               <p className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400">
                 {balance ?? "—"}
               </p>
@@ -155,7 +155,7 @@ export default function AdminGafiwPage() {
 
                     {/* Prices */}
                     <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
-                      {/* Cost price (from GaFiw) */}
+                      {/* Cost price */}
                       <div className="text-right">
                         <p className="text-[10px] text-slate-400 dark:text-slate-500">ต้นทุน</p>
                         <p className="text-sm font-bold text-slate-600 dark:text-slate-300">฿{p.pricevip}</p>

@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
-import ProductCard, { GafiwProduct } from "@/components/ProductCard";
+import ProductCard, { DigitalProduct } from "@/components/ProductCard";
 import Footer from "@/components/Footer";
-import type { GafiwSettings } from "@/app/api/admin/gafiw-settings/route";
+import type { DigitalSettings } from "@/app/api/admin/gafiw-settings/route";
 import ServiceMarquee from "@/components/ui/ServiceMarquee"
 
 // สีแบรนด์ของแต่ละแอป
@@ -37,7 +37,7 @@ function getCatColor(menu: string) {
 }
 
 export default function ShopPage() {
-  const [gafiw, setGafiw] = useState<GafiwProduct[]>([]);
+  const [digital, setDigital] = useState<DigitalProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setCategory] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -47,22 +47,22 @@ export default function ShopPage() {
       fetch("/api/gafiw/products").then((r) => r.json()),
       fetch("/api/admin/gafiw-settings").then((r) => r.json()),
     ]).then(([pData, sData]) => {
-      const all: GafiwProduct[] = pData.data ?? [];
-      const settings: GafiwSettings = sData ?? {};
+      const all: DigitalProduct[] = pData.data ?? [];
+      const settings: DigitalSettings = sData ?? {};
       const visible = all
         .filter((p) => settings[p.type_id]?.enabled !== false)
         .map((p) => settings[p.type_id]?.customPrice
           ? { ...p, pricevip: settings[p.type_id]!.customPrice! }
           : p
         );
-      setGafiw(visible);
+      setDigital(visible);
     }).catch(() => { }).finally(() => setLoading(false));
   }, []);
 
   // หมวดหมู่ที่มีสินค้า
-  const categories = [...new Set(gafiw.map((p) => p.type_menu))];
+  const categories = [...new Set(digital.map((p) => p.type_menu))];
 
-  const filtered = gafiw.filter((p) => {
+  const filtered = digital.filter((p) => {
     if (activeCategory && p.type_menu !== activeCategory) return false;
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import type { GafiwProduct } from "@/components/ProductCard";
+import type { DigitalProduct } from "@/components/ProductCard";
 
 const SERVICES = [
   { name: "Netflix", color: "#E50914", img: "https://gafiwshop.xyz/api/image/netflix.png" },
@@ -75,7 +75,7 @@ function ServiceMarquee() {
 }
 
 export default function LandingPage() {
-  const [featured, setFeatured] = useState<GafiwProduct[]>([]);
+  const [featured, setFeatured] = useState<DigitalProduct[]>([]);
   const [maintenance, setMaintenance] = useState<{ enabled: boolean; type: string }>({ enabled: false, type: "server" });
 
   useEffect(() => {
@@ -91,7 +91,7 @@ export default function LandingPage() {
       fetch("/api/gafiw/products").then((r) => r.json()),
       fetch("/api/admin/gafiw-settings").then((r) => r.json()),
     ]).then(([pData, sData]) => {
-      const all: GafiwProduct[] = pData.data ?? [];
+      const all: DigitalProduct[] = pData.data ?? [];
       const visible = all
         .filter((p) => sData?.[p.type_id]?.enabled !== false && p.stock > 0)
         .map((p) => sData?.[p.type_id]?.customPrice ? { ...p, pricevip: sData[p.type_id].customPrice } : p)

@@ -23,7 +23,7 @@ interface OrderItem {
   id: string; name: string; qty: number; price: number;
   source?: "appwrite" | "gafiw";
   description?: string; deliveryEmail?: string; deliveryPassword?: string;
-  // GaFiwShop
+  // Digital
   gafiwOrderId?: number; gafiwCredentials?: string;
 }
 
@@ -82,7 +82,7 @@ function OrderCard({ order }: { order: Order }) {
                   <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{item.description}</p>
                 </div>
               )}
-              {/* GaFiwShop credentials */}
+              {/* Digital credentials */}
               {item.source === "gafiw" && (
                 <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 space-y-2">
                   <div className="flex items-center justify-between mb-2">
@@ -190,7 +190,7 @@ function HistoryPage() {
               </p>
             )}
             <p className="text-xs text-amber-500 dark:text-amber-600 mt-1">
-              สาเหตุ: ยอดเงินต้นทาง (GaFiwShop) ไม่เพียงพอ กรุณาติดต่อแอดมินเพื่อเติมยอด
+              สาเหตุ: ยอดเงินสินค้า ไม่เพียงพอ กรุณาติดต่อแอดมินเพื่อเติมยอด
             </p>
           </div>
         )}

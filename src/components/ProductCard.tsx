@@ -8,13 +8,13 @@ import { useToast } from "@/context/ToastContext";
 import { getProductImageUrl } from "@appwrite/storage";
 import type { Product, CartItem } from "@appwrite/types";
 
-export interface GafiwProduct {
+export interface DigitalProduct {
   name: string; imageapi: string; details: string;
   price: number; pricevip: number; stock: number;
   type_menu: string; type_id: string;
 }
 
-function gafiwToCartItem(p: GafiwProduct): CartItem {
+function digitalToCartItem(p: DigitalProduct): CartItem {
   return {
     $id: `gafiw_${p.type_id}`, $collectionId: "gafiw", $databaseId: "gafiw",
     $createdAt: "", $updatedAt: "", $permissions: [],
@@ -94,7 +94,7 @@ function DescModal({ title, desc, onClose }: { title: string; desc: string; onCl
 
 type Props =
   | { source: "appwrite"; product: Product }
-  | { source: "gafiw"; product: GafiwProduct; accentColor?: string };
+  | { source: "gafiw"; product: DigitalProduct; accentColor?: string };
 
 export default function ProductCard(props: Props) {
   const { addItem, items } = useCart();
@@ -104,7 +104,7 @@ export default function ProductCard(props: Props) {
 
   if (props.source === "gafiw") {
     const { product: p, accentColor = "#d44242" } = props;
-    const cartItem = gafiwToCartItem(p);
+    const cartItem = digitalToCartItem(p);
     const inCart = items.some((i) => i.$id === cartItem.$id);
 
     return (
