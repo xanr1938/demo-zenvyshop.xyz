@@ -50,7 +50,13 @@ async function buyGafiw(type_id: string): Promise<{ orderId: number; credentials
       body: new URLSearchParams({ keyapi: process.env.GAFIW_API_KEY!, type_id }),
     });
     const data = await res.json() as { ok: boolean; status: string; data?: { uid: number; textdb: string } };
-    if (data.ok && data.data) return { orderId: data.data.uid, credentials: data.data.textdb };
+    if (data.ok && data.data) {
+      const creds = data.data.textdb ?? "";
+      // GaFiw บางครั้งคืน ok:true แต่ textdb เป็น error message
+      const isError = !creds || /ไม่สามารถ|ติดต่อแอดมิน|out of stock|error|ไม่มีสินค้า/i.test(creds);
+      if (isError) return null;
+      return { orderId: data.data.uid, credentials: creds };
+    }
     return null;
   } catch { return null; }
 }

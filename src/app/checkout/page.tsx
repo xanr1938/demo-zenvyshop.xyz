@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
+import { adminFetch } from "@/lib/admin-fetch";
 
 const PROMPTPAY_ID = "0943164353";
 type PayMethod = "wallet" | "slip";
@@ -51,8 +52,7 @@ export default function CheckoutPage() {
       const form = new FormData();
       form.append("slip", slipFile);
       form.append("amount", total.toString());
-      form.append("userId", user!.$id);
-      const res  = await fetch("/api/verify-slip", { method: "POST", body: form });
+      const res  = await adminFetch("/api/verify-slip", { method: "POST", body: form });
       const data = await res.json();
       if (data.success) { setSlipVerified(true); await refreshProfile(); }
       else setError(data.message || "ยืนยันสลิปไม่สำเร็จ");
@@ -66,11 +66,10 @@ export default function CheckoutPage() {
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch("/api/checkout", {
+      const res = await adminFetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: user!.$id,
           items: items.map((i) => ({ id: i.$id, name: i.name, qty: i.qty, price: i.price, source: i.source, type_id: i.type_id })),
           total,
           note,
